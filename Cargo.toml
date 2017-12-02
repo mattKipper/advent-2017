@@ -1,0 +1,7 @@
+[package]
+name = "advent-2017"
+version = "0.1.0"
+authors = ["Matthew Kipper <mattvkipper@gmail.com>"]
+
+[dependencies]
+rand = "0.3"
