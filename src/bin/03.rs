@@ -38,7 +38,7 @@ fn distance((x0, y0): (i64, i64), (x1, y1): (i64, i64)) -> i64 {
 fn print_usage() {
     println!("Day 3: Spiral Memory");
     println!("Usage:");
-    println!("3_spiral_memory <num>");
+    println!("03 <num>");
     println!("  <num> - Unsigned integer");
 }
 

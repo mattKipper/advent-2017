@@ -15,7 +15,7 @@ fn valid_passphrases(input: String) -> usize {
 fn print_usage() {
     println!("Day 4: High Entropy Passphrase");
     println!("Usage:");
-    println!("4_high-entropy-passphrase <input>");
+    println!("04 <input>");
     println!("  <inputs> - One or more passphrases (newline separated)");
 }
 

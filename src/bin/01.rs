@@ -6,7 +6,7 @@ extern crate rand;
 fn print_usage() {
     println!("Day 1: Inverse Captcha");
     println!("Usage:");
-    println!("  1_inverse_captcha [-h / --help] <input_string>");
+    println!("01 [-h / --help] <input_string>");
 }
 
 /// Parses arguments and returns the input string. 

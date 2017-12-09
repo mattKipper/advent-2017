@@ -7,7 +7,7 @@ use std::cmp;
 fn print_usage() {
     println!("Day 2: Corruption Checksum");
     println!("Usage:");
-    println!("  2_corruption_checksum <input_file>");
+    println!("02 <input_file>");
     println!("  <input_file> - Tab-separated spreadsheet");
 }
 
