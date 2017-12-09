@@ -4,6 +4,9 @@ use std::process::exit;
 
 /// Checks if a string slice is a valid passphrase (i.e. no repeated words)
 fn is_valid(passphrase: &str) -> bool {
+    // HashSet::insert() returns true if the inserted value isn't already
+    // in the set, so checking that all words can be inserted without a
+    // false return is an easy check for repeats. 
     let mut word_map = HashSet::new();
     passphrase.split_whitespace().all(|word| word_map.insert(word))
 }
