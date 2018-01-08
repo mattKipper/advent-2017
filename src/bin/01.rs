@@ -1,7 +1,7 @@
 #![feature(test)]
 
-extern crate test;
 extern crate rand;
+extern crate test;
 
 fn print_usage() {
     println!("Day 1: Inverse Captcha");
@@ -9,7 +9,7 @@ fn print_usage() {
     println!("01 [-h / --help] <input_string>");
 }
 
-/// Parses arguments and returns the input string. 
+/// Parses arguments and returns the input string.
 /// If the input string cannot be parsed, this returns
 /// the desired exit code through Err(N).
 fn get_input() -> Result<String, i32> {
@@ -19,15 +19,12 @@ fn get_input() -> Result<String, i32> {
             print_usage();
             Err(-1)
         }
-        Some(arg) => {
-            if arg == "-h" || arg == "--help" {
-                print_usage();
-                Err(0)
-            }
-            else {
-                Ok(arg)
-            }
-        }
+        Some(arg) => if arg == "-h" || arg == "--help" {
+            print_usage();
+            Err(0)
+        } else {
+            Ok(arg)
+        },
     }
 }
 
@@ -55,7 +52,6 @@ fn main() {
         Err(exit_code) => std::process::exit(exit_code),
         Ok(input) => {
             println!("{}", calculate_sum(&input));
-
         }
     };
 }
@@ -98,19 +94,19 @@ mod tests {
 
     #[bench]
     fn bench_hundred(b: &mut Bencher) {
-        let s: String = RandDigits{}.take(100).collect();
+        let s: String = RandDigits {}.take(100).collect();
         b.iter(|| calculate_sum(&s));
     }
 
     #[bench]
     fn bench_ten_thousand(b: &mut Bencher) {
-        let s: String = RandDigits{}.take(10000).collect();
+        let s: String = RandDigits {}.take(10000).collect();
         b.iter(|| calculate_sum(&s));
     }
 
     #[bench]
     fn bench_million(b: &mut Bencher) {
-        let s: String = RandDigits{}.take(1000000).collect();
+        let s: String = RandDigits {}.take(1000000).collect();
         b.iter(|| calculate_sum(&s));
     }
 }

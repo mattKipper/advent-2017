@@ -8,15 +8,14 @@ use std::process::exit;
 
 /// Performs a single jump instruction. Returns Some() with the next
 /// index if the new index is inside the list of jumps, or None if
-/// it's out-of-bounds. 
+/// it's out-of-bounds.
 fn take_jump(jumps: &mut Vec<i32>, index: usize) -> Option<usize> {
     let new_index = (index as i32) + jumps[index];
 
     if new_index >= 0 && (new_index as usize) < jumps.len() {
         jumps[index] += 1;
         Some(new_index as usize)
-    }
-    else {
+    } else {
         None
     }
 }
@@ -28,7 +27,7 @@ fn count_jumps(mut jumps: Vec<i32>) -> u32 {
         count += 1;
         index = next_index;
     }
-    count + 1  // Last jump isn't counted in the loop
+    count + 1 // Last jump isn't counted in the loop
 }
 
 fn print_usage() {
@@ -51,26 +50,22 @@ fn jumps_from_file(filename: String) -> Result<Vec<i32>, InputError> {
             let mut contents = String::new();
 
             match file.read_to_string(&mut contents) {
-                Ok(_) => {
-                    match contents.lines().map(|x| x.parse::<i32>()).collect() {
-                        Ok(jumps) => Ok(jumps),
-                        Err(e) => Err(InputError::Parse(e))
-                    }
-                }
-                Err(e) => Err(InputError::Io(e))
+                Ok(_) => match contents.lines().map(|x| x.parse::<i32>()).collect() {
+                    Ok(jumps) => Ok(jumps),
+                    Err(e) => Err(InputError::Parse(e)),
+                },
+                Err(e) => Err(InputError::Io(e)),
             }
-        },
+        }
 
-        Err(e) => Err(InputError::Io(e))
-    } 
+        Err(e) => Err(InputError::Io(e)),
+    }
 }
 
 fn main() {
     // Usage is one extra arg (input filename)
     if let (2, Some(filename)) = (args().count(), args().nth(1)) {
-
         match jumps_from_file(filename) {
-
             Ok(jumps) => println!("{}", count_jumps(jumps)),
 
             Err(InputError::Io(e)) => {
@@ -83,8 +78,7 @@ fn main() {
                 exit(-1);
             }
         }
-    }
-    else {
+    } else {
         print_usage();
         exit(-1);
     }
@@ -107,17 +101,17 @@ mod tests {
         let original = input.clone();
         assert_eq!(take_jump(&mut input, 1), None);
         assert_eq!(input, original);
-    } 
+    }
 
     #[test]
     fn aoc_example_first_step() {
-        let mut input = vec![0,3,0,1,-3];
+        let mut input = vec![0, 3, 0, 1, -3];
         assert_eq!(take_jump(&mut input, 0), Some(0));
-        assert_eq!(input, vec![1,3,0,1,-3]);
+        assert_eq!(input, vec![1, 3, 0, 1, -3]);
     }
 
     #[test]
     fn aoc_example() {
-        assert_eq!(count_jumps(vec![0,3,0,1,-3]), 5);
+        assert_eq!(count_jumps(vec![0, 3, 0, 1, -3]), 5);
     }
 }

@@ -27,19 +27,16 @@ fn get_input() -> Result<Input, InputError> {
 }
 
 fn input_from_file(filename: String) -> Result<Input, InputError> {
-
     match File::open(filename) {
-
         Ok(mut file) => {
-
             let mut contents = String::new();
             match file.read_to_string(&mut contents) {
                 Ok(_) => parse_input(contents),
-                Err(err) => Err(InputError::Io(err))
+                Err(err) => Err(InputError::Io(err)),
             }
-        },
+        }
 
-        Err(err) => Err(InputError::Io(err))
+        Err(err) => Err(InputError::Io(err)),
     }
 }
 
@@ -58,31 +55,31 @@ fn parse_input(text: String) -> Result<Input, InputError> {
     Ok(values)
 }
 
-/// Calculate the checksum, provided a valid input matrix. 
+/// Calculate the checksum, provided a valid input matrix.
 fn checksum(input: Input) -> u32 {
     // The following approach is used:
     //  1. map() each row from Vec<u32> -> (min: u32, max: u32)
     //  2. Take the sum of (max - min) for all (min, max) tuples
-    input.iter().map( |row| {
-        row.iter().fold( 
-            (row.first().unwrap(), row.first().unwrap()), 
-            |(min, max), x| {
-                (cmp::min(min, x), cmp::max(max, x))
-            }
-        )
-    })
-    .fold(0, |acc, (min, max)| acc + max - min)
+    input
+        .iter()
+        .map(|row| {
+            row.iter().fold(
+                (row.first().unwrap(), row.first().unwrap()),
+                |(min, max), x| (cmp::min(min, x), cmp::max(max, x)),
+            )
+        })
+        .fold(0, |acc, (min, max)| acc + max - min)
 }
 
 /// Calculates the "checksum" of an input matrix file, printing the
-/// result to stdout. 
+/// result to stdout.
 ///
 /// The input file has the following format:
 ///     1. Columns tab-separated (\t)
 ///     2. Rows newline-separated (\n)
 ///     3. Values are unsigned 32-bit integers
-/// 
-/// The checksum is defined as sum(max(row) - min(row)) for all rows. 
+///
+/// The checksum is defined as sum(max(row) - min(row)) for all rows.
 fn main() {
     let input = get_input();
 
@@ -125,19 +122,19 @@ mod tests {
         let input = String::from("1\t2\t3\n9\t8\t7\n");
         assert_eq!(
             parse_input(input).unwrap(),
-            vec![ vec![1, 2, 3], vec![9, 8, 7]]
+            vec![vec![1, 2, 3], vec![9, 8, 7]]
         );
     }
 
     #[test]
     fn checksum_nonzero() {
-        let input = vec![ vec![6, 5, 1], vec![3, 5, 8], vec![5, 1, 3]];
+        let input = vec![vec![6, 5, 1], vec![3, 5, 8], vec![5, 1, 3]];
         assert_eq!(checksum(input), 14);
     }
 
     #[test]
     fn checksum_zero() {
-        let input = vec![ vec![1, 1], vec![2, 2], vec![99, 99]];
+        let input = vec![vec![1, 1], vec![2, 2], vec![99, 99]];
         assert_eq!(checksum(input), 0);
     }
 }

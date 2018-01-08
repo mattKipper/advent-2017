@@ -27,7 +27,7 @@ impl Operator {
         }
     }
 
-    fn eval<T>(&self, a: &T, b: &T) -> bool 
+    fn eval<T>(&self, a: &T, b: &T) -> bool
     where
         T: PartialEq + PartialOrd,
     {
@@ -69,7 +69,7 @@ impl Opcode {
 
 struct Instruction<T>
 where
-    T: PartialEq + PartialOrd + AddAssign + SubAssign 
+    T: PartialEq + PartialOrd + AddAssign + SubAssign,
 {
     register: String,
     op: Opcode,
@@ -81,10 +81,9 @@ where
 
 impl<T> Instruction<T>
 where
-    T: PartialEq + PartialOrd + AddAssign + SubAssign + FromStr
+    T: PartialEq + PartialOrd + AddAssign + SubAssign + FromStr,
 {
     fn from_line(line: &str) -> Option<Instruction<T>> {
-
         let symbols = line.split_whitespace().collect::<Vec<&str>>();
 
         if symbols.len() != 7 {
@@ -96,34 +95,36 @@ where
         let cond_op = Operator::from_str(symbols[5]);
         let cond_operand = symbols[6].parse::<T>();
 
-        if let (Some(op), Ok(operand), Some(cond_op), Ok(cond_operand)) = (op, operand, cond_op, cond_operand) {
+        if let (Some(op), Ok(operand), Some(cond_op), Ok(cond_operand)) =
+            (op, operand, cond_op, cond_operand)
+        {
             Some(Instruction {
                 register: String::from(symbols[0]),
                 op: op,
                 operand: operand,
                 condition_register: String::from(symbols[4]),
                 condition: cond_op,
-                condition_operand: cond_operand
+                condition_operand: cond_operand,
             })
-        }
-        else {
+        } else {
             None
         }
     }
 }
 
 fn register_dump(input: String) -> HashMap<String, i32> {
-    
-    let mut registers: HashMap<String,i32> = HashMap::new();
+    let mut registers: HashMap<String, i32> = HashMap::new();
 
     for line in input.lines() {
         if let Some(mut instruction) = Instruction::<i32>::from_line(&line) {
-
-            let condition_reg_val: i32 = *registers.entry(instruction.condition_register).or_insert(0);
+            let condition_reg_val: i32 =
+                *registers.entry(instruction.condition_register).or_insert(0);
             let condition_operand = instruction.condition_operand;
 
-            if instruction.condition.eval(&condition_reg_val, &condition_operand) {
-
+            if instruction
+                .condition
+                .eval(&condition_reg_val, &condition_operand)
+            {
                 let reg_val = registers.entry(instruction.register).or_insert(0);
                 instruction.op.apply(reg_val, instruction.operand);
             }
@@ -153,5 +154,4 @@ fn main() {
 
 #[cfg(test)]
 mod test {
-    use super::*;
 }

@@ -6,15 +6,14 @@ use std::process::exit;
 // and the string values of its children
 struct Node<'a> {
     value: &'a str,
-    child_values: Vec<&'a str>
+    child_values: Vec<&'a str>,
 }
 
 impl<'a> Node<'a> {
-
     // Each valid tree line has the following format:
     //   $value ($weight) -> $child_0, $child_1, ..., $child_n
     // The '-> ...' sequence is omitted (including ->!) if the
-    // node has no children. 
+    // node has no children.
     fn from_str(line: &'a str) -> Node<'a> {
         Node {
             // Every valid node has a value (i.e. no error-check here)
@@ -28,13 +27,11 @@ impl<'a> Node<'a> {
             child_values: {
                 match line.split(|c| c == '>').skip(1).next() {
                     Some(child_values) => {
-                        child_values.split(|c| c == ',')
-                                .map(|s| s.trim())
-                                .collect()
+                        child_values.split(|c| c == ',').map(|s| s.trim()).collect()
                     }
-                    None => vec![]
+                    None => vec![],
                 }
-            }
+            },
         }
     }
 }
@@ -49,23 +46,21 @@ fn flatten<'a>(mut node: Node<'a>) -> Vec<&'a str> {
 
 /// Get the root node from a tree (see AoC problem for tree format)
 fn root_node(tree: String) -> String {
-
     let mut tree_nodes = HashSet::with_capacity(tree.lines().count());
 
     // Every node in the tree appears exactly twice (once as child + once
     // as parent) EXCEPT for the root node (only once as parent). Traverse
     // the tree, inserting all new nodes encountered (including children) and
     // deleting existing nodes when a duplicate is encountered. Since every
-    // node except the root node has exactly one duplicate, the resulting 
-    // HashSet should ONLY contain the root node   
+    // node except the root node has exactly one duplicate, the resulting
+    // HashSet should ONLY contain the root node
     for line in tree.lines() {
         let line_nodes = flatten(Node::from_str(line));
 
         for node in line_nodes {
             if tree_nodes.contains(node) {
                 tree_nodes.remove(node);
-            }
-            else {
+            } else {
                 tree_nodes.insert(node);
             }
         }
@@ -84,8 +79,7 @@ fn print_usage() {
 fn main() {
     if let (2, Some(input)) = (args().count(), args().nth(1)) {
         println!("{}", root_node(input));
-    }
-    else {
+    } else {
         print_usage();
         exit(-1);
     }
@@ -93,7 +87,7 @@ fn main() {
 
 
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
 
     #[test]
@@ -120,13 +114,19 @@ mod tests{
 
     #[test]
     fn flatten_no_child_values() {
-        let node = Node { value: "abcd", child_values: vec![] };
+        let node = Node {
+            value: "abcd",
+            child_values: vec![],
+        };
         assert_eq!(flatten(node), vec!["abcd"]);
     }
 
     #[test]
     fn flatten_with_child_values() {
-        let node = Node { value: "ab", child_values: vec!["cd", "ef"] };
+        let node = Node {
+            value: "ab",
+            child_values: vec!["cd", "ef"],
+        };
         assert_eq!(flatten(node), vec!["cd", "ef", "ab"]);
     }
 
